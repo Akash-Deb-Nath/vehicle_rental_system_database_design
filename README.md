@@ -133,7 +133,7 @@ Objective: Find all vehicles that have never been booked
 # Query
 
 ```sql
-SELECT \*
+SELECT *
 FROM
 vehicles v
 WHERE
@@ -170,7 +170,7 @@ rental_price int,
 status varchar(15)
 )
 LANGUAGE sql AS $$
-SELECT \*
+SELECT *
 FROM vehicles
 WHERE type = vehicle_type
 AND status = 'available';
