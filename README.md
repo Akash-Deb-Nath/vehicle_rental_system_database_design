@@ -98,12 +98,14 @@ Objective: Retrieve booking information along with Customer name and Vehicle nam
 
 ---
 
-- Explanation:
 - Uses INNER JOIN to combine 'bookings', 'users', and 'vehicles' tables.
 - Returns only bookings that have valid corresponding users and vehicles.
 - Displays booking ID, customer name, vehicle name, start and end dates, and status.
 - Useful for generating comprehensive booking reports.
 
+# Query
+
+```sql
 SELECT
 b.booking_id,
 u.name AS customer_name,
@@ -115,6 +117,7 @@ FROM
 bookings AS b
 INNER JOIN users AS u ON b.user_id = u.user_id
 INNER JOIN vehicles AS v ON b.vehicle_id = v.vehicle_id;
+```
 
 ---
 
@@ -123,11 +126,13 @@ Objective: Find all vehicles that have never been booked
 
 ---
 
-- Explanation:
 - Uses NOT EXISTS to identify vehicles with no associated bookings.
 - Returns complete details of vehicles that have never been rented.
 - Helps in detecting underutilized vehicles that might need promotion or maintenance.
 
+# Query
+
+```sql
 SELECT \*
 FROM
 vehicles v
@@ -137,6 +142,7 @@ SELECT 1
 FROM bookings b
 WHERE b.vehicle_id = v.vehicle_id
 );
+```
 
 ---
 
@@ -145,12 +151,14 @@ Objective: Retrieve all available vehicles of a specific type (e.g., cars)
 
 ---
 
-- Explanation:
 - Defines a parameterized SQL function to retrieve vehicles by type.
 - Filters only vehicles that are currently available.
 - Function can be reused for any vehicle type (e.g., car, bike, van).
 - Simplifies queries and improves code maintainability.
 
+# Query
+
+```sql
 CREATE FUNCTION retrieve_by_type(vehicle_type varchar(15))
 RETURNS TABLE (
 vehicle_id int,
@@ -170,23 +178,27 @@ AND status = 'available';
 $$
 ;
 
-- Example call for 'car'
+-- Example call for 'car'
 
 SELECT *
 FROM retrieve_by_type('car');
+```
 
+---
 
------------------------------------------------------------
 Query 4: GROUP BY and HAVING Requirement
 Objective: Count total bookings for each vehicle and display only vehicles with more than 2 bookings
------------------------------------------------------------
 
-- Explanation:
+---
+
 - Uses GROUP BY to aggregate bookings for each vehicle.
 - HAVING filters only those vehicles with more than 2 bookings.
 - Helps identify popular vehicles and analyze rental trends.
 - Useful for business decisions such as fleet expansion or marketing.
 
+# Query
+
+```sql
 SELECT
     v.name AS vehicle_name,
     COUNT(b.booking_id) AS total_bookings
@@ -198,10 +210,14 @@ GROUP BY
     v.name
 HAVING
     COUNT(b.booking_id) > 2;
+```
+
 ---
 
 ### ✅ Conclusion
 
 This project successfully implements a Vehicle Rental System using relational database concepts.
 It follows proper normalization, relationship mapping, and real-world SQL operations.
+
+$$
 $$
