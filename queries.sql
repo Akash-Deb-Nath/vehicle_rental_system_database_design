@@ -20,7 +20,7 @@ FROM
 WHERE
   NOT EXISTS (
     SELECT
-      1
+      *
     FROM
       bookings b
     WHERE
@@ -62,7 +62,6 @@ FROM
   bookings AS b
   INNER JOIN vehicles AS v ON b.vehicle_id = v.vehicle_id
 GROUP BY
-  b.vehicle_id,
   v.name
 HAVING
   count(b.booking_id) > 2;
