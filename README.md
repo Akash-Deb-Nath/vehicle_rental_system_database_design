@@ -79,7 +79,7 @@ The ERD was designed using **Lucidchart** and includes:
 - Crow’s foot notation
 - Relationship cardinalities
 
-🔗 **ERD Link:** https://shorturl.at/p4XN7
+🔗 **ERD Link:** https://shorturl.at/Z8snL
 
 ---
 
@@ -91,99 +91,101 @@ The `queries.sql` file contains all required SQL queries used in this project.
 
 ---
 
-/* 
------------------------------------------------------------
+---
+
 Query 1: JOIN Requirement
 Objective: Retrieve booking information along with Customer name and Vehicle name
------------------------------------------------------------
-*/
--- Explanation:
--- Uses INNER JOIN to combine 'bookings', 'users', and 'vehicles' tables.
--- Returns only bookings that have valid corresponding users and vehicles.
--- Displays booking ID, customer name, vehicle name, start and end dates, and status.
--- Useful for generating comprehensive booking reports.
+
+---
+
+- Explanation:
+- Uses INNER JOIN to combine 'bookings', 'users', and 'vehicles' tables.
+- Returns only bookings that have valid corresponding users and vehicles.
+- Displays booking ID, customer name, vehicle name, start and end dates, and status.
+- Useful for generating comprehensive booking reports.
 
 SELECT
-    b.booking_id,
-    u.name AS customer_name,
-    v.name AS vehicle_name,
-    b.start_date,
-    b.end_date,
-    b.status
+b.booking_id,
+u.name AS customer_name,
+v.name AS vehicle_name,
+b.start_date,
+b.end_date,
+b.status
 FROM
-    bookings AS b
-    INNER JOIN users AS u ON b.user_id = u.user_id
-    INNER JOIN vehicles AS v ON b.vehicle_id = v.vehicle_id;
+bookings AS b
+INNER JOIN users AS u ON b.user_id = u.user_id
+INNER JOIN vehicles AS v ON b.vehicle_id = v.vehicle_id;
 
+---
 
-/* 
------------------------------------------------------------
 Query 2: EXISTS Requirement
 Objective: Find all vehicles that have never been booked
------------------------------------------------------------
-*/
--- Explanation:
--- Uses NOT EXISTS to identify vehicles with no associated bookings.
--- Returns complete details of vehicles that have never been rented.
--- Helps in detecting underutilized vehicles that might need promotion or maintenance.
 
-SELECT
-    *
+---
+
+- Explanation:
+- Uses NOT EXISTS to identify vehicles with no associated bookings.
+- Returns complete details of vehicles that have never been rented.
+- Helps in detecting underutilized vehicles that might need promotion or maintenance.
+
+SELECT \*
 FROM
-    vehicles v
+vehicles v
 WHERE
-    NOT EXISTS (
-        SELECT 1
-        FROM bookings b
-        WHERE b.vehicle_id = v.vehicle_id
-    );
+NOT EXISTS (
+SELECT 1
+FROM bookings b
+WHERE b.vehicle_id = v.vehicle_id
+);
 
+---
 
-/* 
------------------------------------------------------------
 Query 3: WHERE Requirement
 Objective: Retrieve all available vehicles of a specific type (e.g., cars)
------------------------------------------------------------
-*/
--- Explanation:
--- Defines a parameterized SQL function to retrieve vehicles by type.
--- Filters only vehicles that are currently available.
--- Function can be reused for any vehicle type (e.g., car, bike, van).
--- Simplifies queries and improves code maintainability.
 
-CREATE FUNCTION retrieve_by_type(vehicle_type varchar(15)) 
+---
+
+- Explanation:
+- Defines a parameterized SQL function to retrieve vehicles by type.
+- Filters only vehicles that are currently available.
+- Function can be reused for any vehicle type (e.g., car, bike, van).
+- Simplifies queries and improves code maintainability.
+
+CREATE FUNCTION retrieve_by_type(vehicle_type varchar(15))
 RETURNS TABLE (
-    vehicle_id int,
-    name varchar(50),
-    type varchar(15),
-    model int,
-    registration_number text,
-    rental_price int,
-    status varchar(15)
+vehicle_id int,
+name varchar(50),
+type varchar(15),
+model int,
+registration_number text,
+rental_price int,
+status varchar(15)
 )
 LANGUAGE sql AS $$
-    SELECT *
-    FROM vehicles
-    WHERE type = vehicle_type
-      AND status = 'available';
-$$;
+SELECT \*
+FROM vehicles
+WHERE type = vehicle_type
+AND status = 'available';
 
--- Example call for 'car'
+$$
+;
+
+- Example call for 'car'
+
 SELECT *
 FROM retrieve_by_type('car');
 
 
-/* 
 -----------------------------------------------------------
 Query 4: GROUP BY and HAVING Requirement
 Objective: Count total bookings for each vehicle and display only vehicles with more than 2 bookings
 -----------------------------------------------------------
-*/
--- Explanation:
--- Uses GROUP BY to aggregate bookings for each vehicle.
--- HAVING filters only those vehicles with more than 2 bookings.
--- Helps identify popular vehicles and analyze rental trends.
--- Useful for business decisions such as fleet expansion or marketing.
+
+- Explanation:
+- Uses GROUP BY to aggregate bookings for each vehicle.
+- HAVING filters only those vehicles with more than 2 bookings.
+- Helps identify popular vehicles and analyze rental trends.
+- Useful for business decisions such as fleet expansion or marketing.
 
 SELECT
     v.name AS vehicle_name,
@@ -202,3 +204,4 @@ HAVING
 
 This project successfully implements a Vehicle Rental System using relational database concepts.
 It follows proper normalization, relationship mapping, and real-world SQL operations.
+$$
